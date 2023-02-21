@@ -1,0 +1,28 @@
+/**
+ * WARNING: Do not change this file. Your changes will be lost.
+ * 2019-05-17 02:47:07 */
+
+.header-container.type3 .header .form-search { border-width: 3px; }
+  .footer-top, .footer-middle, .footer-bottom {
+    padding-left: 15px;
+    padding-right: 15px;
+    margin: 0 auto;
+  }
+@media (min-width: 768px) {
+  .footer-top, .footer-middle, .footer-bottom {
+    width: 720px;
+  }
+}
+@media (min-width: 992px) {
+  .footer-top, .footer-middle, .footer-bottom {
+    width: 940px;
+  }
+}
+@media (min-width: 1200px) {
+  .footer-top, .footer-middle, .footer-bottom {
+    width: 1110px;
+  }
+}}
+logo-size
+    width: 720px;
+  }

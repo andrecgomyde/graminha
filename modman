@@ -1,0 +1,6 @@
+app/etc/modules/Demac_MultiLocationInventory.xml                                          app/etc/modules/Demac_MultiLocationInventory.xml
+app/code/community/Demac/MultiLocationInventory                                           app/code/community/Demac/MultiLocationInventory
+app/design/adminhtml/default/default/layout/demac/multilocationinventory.xml              app/design/adminhtml/default/default/layout/demac/multilocationinventory.xml
+app/design/adminhtml/default/default/template/demac/catalog_multilocationinventory.phtml  app/design/adminhtml/default/default/template/demac/catalog_multilocationinventory.phtml
+app/locale/en_US/Demac/MultiLocationInventory.csv                                         app/locale/en_US/Demac/MultiLocationInventory.csv
+app/locale/fr_FR/Demac/MultiLocationInventory.csv                                         app/locale/fr_FR/Demac/MultiLocationInventory.csv

@@ -1,0 +1,8 @@
+#bss_configurablegridview tr td{vertical-align: middle;}
+#bss_configurablegridview tr td.unit .old-price .price{font-weight: normal;font-size: 10px;text-decoration: line-through;}
+#bss_configurablegridview tr td.unit .price{font-weight: bold;}
+#bss_configurablegridview tr td.swatch span,#bss_configurablegridview tr td.swatch img,#bss_configurablegridview .reset-configurablegridview{cursor: pointer;}
+#bss_configurablegridview .bss-no-display{display:none !important;}
+#bss_configurablegridview{overflow: auto;}
+#bss_configurablegridview .attributes img{display:inline-block;}
+.product-shop .price-box .regular-price-clone{display: none;}

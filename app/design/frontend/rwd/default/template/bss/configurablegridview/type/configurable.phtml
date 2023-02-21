@@ -1,0 +1,382 @@
+<?php
+/**
+* BssCommerce Co.
+*
+* NOTICE OF LICENSE
+*
+* This source file is subject to the EULA
+* that is bundled with this package in the file LICENSE.txt.
+* It is also available through the world-wide-web at this URL:
+* http://bsscommerce.com/Bss-Commerce-License.txt
+*
+* =================================================================
+*                 MAGENTO EDITION USAGE NOTICE
+* =================================================================
+* This package designed for Magento COMMUNITY edition
+* BssCommerce does not guarantee correct work of this extension
+* on any other Magento edition except Magento COMMUNITY edition.
+* BssCommerce does not provide extension support in case of
+* incorrect edition usage.
+* =================================================================
+*
+* @category   BSS
+* @package    BSS_Configurablegridview
+* @author     Hieu Dang
+* @copyright  Copyright (c) 2014-2105 BssCommerce Co. (http://bsscommerce.com)
+* @license    http://bsscommerce.com/Bss-Commerce-License.txt
+*/
+?>
+<?php
+$_product    = $this->getProduct();
+$_helper = $this->helper('catalog/output');
+$associative_products = $this->getProduct()->getTypeInstance()->getUsedProducts();
+$_attributes = Mage::helper('core')->decorateArray($this->getAllowAttributes());
+$helper = Mage::helper('configurablegridview');
+$_coreHelper = $this->helper('core');
+$config = Mage::app()->getLocale()->getJsPriceFormat();
+$priceFormat = Mage::helper('core')->jsonEncode($config);
+$quote = Mage::getModel('checkout/session')->getQuote();
+
+$dimHelper = Mage::helper('configurableswatches/swatchdimensions');
+$_swatchInnerWidth = $dimHelper->getInnerWidth(Mage_ConfigurableSwatches_Helper_Swatchdimensions::AREA_DETAIL);
+$_swatchInnerHeight = $dimHelper->getInnerHeight(Mage_ConfigurableSwatches_Helper_Swatchdimensions::AREA_DETAIL);
+foreach ($quote->getAllVisibleItems() as $item) {
+	if($item->getProduct()->getId() == $_product->getId()){
+	    $quote = Mage::getSingleton('checkout/session')->getQuote();
+		$quoteItem = $quote->getItemById($item->getId());
+		if(count($quoteItem) > 0){
+			$params = new Varien_Object();
+	        $params->setCategoryId(false);
+	        $params->setConfigureMode(true);
+	        $params->setBuyRequest($quoteItem->getBuyRequest());
+	        $params->setItemId($item->getId());
+	    }
+	    $paramsConfs[] = $params;
+	}
+}
+?>
+<?php
+	$productAttributes = $this->getAllowAttributes();
+	$configurable_products = unserialize($helper->getChildrenInfo($_product,$productAttributes));
+?>
+	<p>&nbsp;</p>
+	<div id="bss_configurablegridview">
+		<table class="configurable-product-table data-table cart-table" style="width:100%">
+			<thead>
+				<tr class="first last">
+					<input type="hidden" name="configurable_grid_table" value="Yes" />
+					<input type="hidden" name="products" value="<?php echo $_product->getId(); ?>"/>
+					<?php foreach($configurable_products['labels'] as $_label ) : ?>
+						<th class="a-left attributes"><?php echo $_label; ?></th>
+					<?php endforeach ?>
+					<?php if($helper->getSetting('enable_stock_avail')): ?>
+						<th class="a-left avaibility"><?php echo $this->__('Availability'); ?></th>
+					<?php endif;?>
+					<?php if($helper->getSetting('show_unit_price')):?>
+						<th class="a-left unit"><?php echo $this->__('Unit Price'); ?></th>
+					<?php endif;?>
+					<?php
+						$childProducts = Mage::getModel('catalog/product_type_configurable')->getUsedProducts(null,$_product);
+	                    foreach($childProducts as $child) {
+							$childId = $child->getId();
+							$childProduct = Mage::getModel('catalog/product')->load($childId);
+							break;
+						}
+					?>
+
+					<?php if($helper->getSetting('show_tier_price') && $_product->getTierPrice() && !$helper->getSetting('use_simple_price')) : ?>
+						<?php
+							$tierPrices = $_product->getTierPrice();
+							$tierQtys_arr = array();
+							$tierPrices_arr = array();
+							foreach ($tierPrices as $tier){
+								if($tier['price_qty'] > 1) {
+									$tierQtys_arr[] = (int) $tier['price_qty'] - 1;
+									$tierPrices_arr[] = number_format($tier['price'],2);
+								}
+							}
+							array_unshift($tierPrices_arr, number_format($_product->getPrice(), 2));
+							array_push($tierQtys_arr, 'more');
+							$i = 1;
+						?>
+						<?php foreach ($tierQtys_arr as $tierQty): ?>
+							<th class="a-left price"><?php echo $i.' - '. $tierQty;?></th>
+							<?php $i = $tierQty + 1;?>
+						<?php endforeach;?>
+					<?php endif ?>
+				<?php if($helper->getSetting('show_price')) : ?>
+					<th class="a-left price"><?php echo $this->__('Subtotal'); ?></th>
+				<?php endif ?>
+				<th class="a-left qty"><?php echo $this->__('Qty'); ?></th>
+			</tr>
+		</thead>
+		<tbody>
+			<?php foreach($configurable_products['products'] as $productVal) : ?>
+				<?php
+					$childrenId = $productVal['info']['prod_id'];
+				?>
+				<tr>
+					<?php
+						$att_price = 0;
+						foreach($productVal['attributes'] as $att) : ?>
+							<?php $hidden_super_val = '<input type="hidden" name="super_attribute_quickshop['.$childrenId.']['.$att['attribute_id'].']" class="attribute-select"  value="'.$att['option_id'].'" data-label="'.$att['attribute_id'].'" data-childid ="'.$childrenId.'">';
+					?>
+					<!-- Start Add Color Swatch -->
+					<?php
+						$_swatchUrl = '';
+						if(Mage::helper('core')->isModuleEnabled('Mage_ConfigurableSwatches') && Mage::helper('configurableswatches')->isEnabled()) {
+							$_swatchUrl = Mage::helper('configurableswatches/productimg')->getSwatchUrl($_product, $att['value'], $_swatchInnerWidth, $_swatchInnerHeight);
+						}
+					?>
+					<td class="a-left attributes <?php if($helper->getSetting('option_swatch')) echo 'swatch'?>">
+						<?php if($_swatchUrl):?>
+							<img src="<?php echo $_swatchUrl?>" alt="<?php echo $att['value'];?>" data-label="<?php echo $att['value'];?>" width="<?php echo $_swatchInnerWidth ?>" height="<?php echo $_swatchInnerHeight ?>"/>
+						<?php else:?>
+							<span><?php echo $att['value'];?></span>
+						<?php endif;?>
+						<?php echo $hidden_super_val;?>
+					</td>
+					<!-- End Add Color Swatch -->
+					<?php if($att['is_percent'] == 1) $att['pricing_value'] = $_product->getFinalPrice() * $att['pricing_value'] / 100;?>
+				<?php $att_price = $helper->getSetting('use_simple_price') ? 0 : $att['pricing_value'] + $att_price; ?>
+			<?php endforeach ?>
+			<?php
+				$childProduct = Mage::getModel('catalog/product')->load($childrenId);
+				$inStock = $childProduct->getStockItem()->getIsInStock();
+				$qty_label = '';
+				if($inStock){
+					$qty_label = $helper->getSetting('show_number_stock') ? $productVal['info']['qty'] : $this->__('In stock');
+	                $disabled = '';
+				}else{
+					$qty_label = $this->__('Out of stock');
+	                $disabled = 'readonly';
+				}
+			?>
+			<?php if($helper->getSetting('enable_stock_avail')):?>
+				<td class="a-left avaibility"><?php echo $qty_label; ?></td>
+			<?php endif;?>
+			<!-- Start Add Unit Price -->
+			<?php $productInfo = $helper->getSetting('use_simple_price') ? Mage::getModel('catalog/product')->load($childrenId) : $_product;?>
+			<?php if($helper->getSetting('show_unit_price')):?>
+				<td class="a-left unit">
+					<?php if($helper->getHasSpecialPrice($productInfo)):?>
+						<p class="special-price">
+							<span class="price">
+							<?php echo $_coreHelper->currency($helper->getHasSpecialPrice($productInfo) + $att_price, true, true);?>
+							</span>
+						</p>
+						<p class="old-price">
+							<span class="price">
+							<?php echo $_coreHelper->currency($productInfo->getPrice() + $att_price, true, true);?>
+							</span>
+						</p>
+					<?php else:?>
+						<span class="regular-price">
+							<span class="price">
+								<?php 
+									echo $_coreHelper->currency($productInfo->getFinalPrice() + $att_price, true, true);
+								?>
+							</span>
+						</span>
+					<?php endif;?>
+
+					<?php if($helper->getSetting('show_tier_price') && $productInfo->getTierPrice() && $helper->getSetting('use_simple_price')) : ?>
+						<div class="tier-simple">
+						<?php $simpleTier = $productInfo->getTierPrice(); ?>
+						<?php foreach ($simpleTier as $t) : ?>
+							<div class="tier-simple-item">
+								<?php echo $this->__('Buy %s for %s each', (int)$t['price_qty'], $_coreHelper->currency($t['price']+ $att_price, true, true));?>
+							</div>
+						<?php endforeach; ?>
+						</div>
+					<?php endif; ?>
+				</td>
+			<?php endif;?>
+			<!-- End Add Unit Price -->
+			<!-- Start Add Tier Price -->
+			<?php
+				if($productInfo->getTierPrice()) {
+					$tierpricesProduct = $productInfo->getTierPrice();
+				} else  {
+					$tierpricesProduct = array();
+				}
+				$tierAfter = array();
+				if($tierpricesProduct) {
+					foreach ($tierpricesProduct as $t) {
+						if($t['price_qty'] > 1) {
+							$tierAfter[] = $t;
+						}
+					} 
+				}
+				array_unshift($tierAfter, array('price_qty'=>1,'price'=>$_coreHelper->currency($productInfo->getFinalPrice(), false, false)));
+			?>
+			<?php if($helper->getSetting('show_tier_price') && $productInfo->getTierPrice() && !$helper->getSetting('use_simple_price')) : ?>
+				<?php $i = 0;foreach ($tierAfter as $key => $tierPrice):?>
+					<td class="a-left Tier">
+						<?php
+							$pricePrev = '';
+							$priceCurrent = '';
+							$priceFinal = '';
+							$pricePrev = $_coreHelper->currency($tierAfter[$i-1]['price'] + $att_price, false, false);
+							$priceCurrent = $_coreHelper->currency($tierPrice['price'] + $att_price, false, false);
+							$priceFinal = $_coreHelper->currency($productInfo->getFinalPrice() + $att_price, false, false);
+							$priceShow = $_coreHelper->currency($tierAfter[$i-1]['price'], false, false) ? min(array($pricePrev,$priceCurrent,$priceFinal)) : $priceFinal;
+							echo $_coreHelper->currency($priceShow, true, true);
+							$i++;
+						?>
+					</td>
+				<?php endforeach;?>
+			<?php endif ?>
+			<!-- End Add Tier Price -->
+
+			<?php if($helper->getSetting('show_price')) : ?>
+				<td class="a-left price total_<?php echo $childrenId.'_'.$_product->getId();?>">
+					<?php echo $_coreHelper->currency(0, true, true) ?>
+				</td>
+			<?php endif ?>
+			<td class="a-left qty">
+				<?php
+					$arr = array();
+					foreach ($productVal['attributes'] as $productAttr) {
+						$arr[$productAttr['attribute_id']] = $productAttr['option_id'];
+					}
+				?>
+				<?php if(Mage::app()->getRequest()->getActionName() == 'configure'):?>
+					<?php $flag = true;?>
+					<?php foreach ($paramsConfs as $paramsConf):?>
+						<?php if(count(array_diff_assoc($arr, $paramsConf['buy_request']['super_attribute'])) == 0 && count($arr) != 0 && count($arr) == count($paramsConf['buy_request']['super_attribute']) && $paramsConf['buy_request']->getData('qty')):?>
+							<?php $flag = false;?>
+							<input type="hidden" value="<?php echo $paramsConf['item_id'];?>" name="item_id[<?php echo $childrenId; ?>]">
+							<input type="text" min="0" data-id="<?php echo $childrenId.'_'.$_product->getId();?>" name="config_table_qty[<?php echo $childrenId; ?>]" value="<?php echo $paramsConf['buy_request']->getData('qty');?>" <?php echo $disabled; ?> id="super_group_qty_<?php echo $childrenId;?>" class="qty_att_product input-text qty validate-not-negative-number required-entry" data-label="<?php echo $childrenId; ?>">
+						<?php endif;?>
+					<?php endforeach;?>
+					<?php if($flag):?>
+						<input type="text" min="0" data-id="<?php echo $childrenId.'_'.$_product->getId();?>" name="config_table_qty[<?php echo $childrenId; ?>]" value="0" <?php echo $disabled; ?> id="super_group_qty_<?php echo $childrenId;?>" class="qty_att_product input-text qty validate-not-negative-number required-entry" data-label="<?php echo $childrenId; ?>">
+					<?php endif;?>
+				<?php else:?>
+					<input type="text" min="0" data-id="<?php echo $childrenId.'_'.$_product->getId();?>" name="config_table_qty[<?php echo $childrenId; ?>]" value="0" <?php echo $disabled; ?> id="super_group_qty_<?php echo $childrenId;?>" class="qty_att_product input-text qty validate-not-negative-number required-entry" data-label="<?php echo $childrenId; ?>">
+				<?php endif;?>
+					<input type="hidden" class="price_<?php echo $childrenId.'_'.$_product->getId();?>" value="<?php echo $_coreHelper->currency($productInfo->getFinalPrice() + $att_price, false, false);?>">
+					<input type="hidden" class="old_price_<?php echo $childrenId.'_'.$_product->getId();?>" value="<?php echo $_coreHelper->currency($productInfo->getPrice() + $att_price, false, false);?>">
+				</td>
+			<td class="bss-no-display tierprice_group_<?php echo $childrenId.'_'.$_product->getId();?>">
+				<?php
+				$j = 0;
+				foreach ($tierAfter as $key => $tierPrice):
+					$pricePrev = '';
+					$priceCurrent = '';
+					$priceFinal = '';
+					$pricePrev = $_coreHelper->currency($tierAfter[$j-1]['price'] + $att_price, false, false);
+					$priceCurrent = $_coreHelper->currency($tierPrice['price'] + $att_price, false, false);
+					$priceFinal = $_coreHelper->currency($productInfo->getFinalPrice() + $att_price, false, false);
+					$priceShow = $_coreHelper->currency($tierAfter[$j-1]['price'], false, false) ? min(array($pricePrev,$priceCurrent,$priceFinal)) : $priceFinal;
+					$priceQty = intval($tierPrice['price_qty']);
+					$j++;
+				?>
+				<input type="text" data-qty="<?php echo $priceQty;?>" class="tierprice" value="<?php echo $priceShow;?>" />
+				<?php endforeach;?>
+			</td>
+		</tr>
+	<?php endforeach ?>
+</tbody>
+</table>
+<input type="hidden" class="required-entry check-configuable-product" >
+<img title="Reset" class="v-middle reset-configurablegridview" alt="reset" src="<?php echo $this->getSkinUrl('images/bss/ico_reset.png') ?>">
+</div>
+<input type="hidden" id="custom_option" value='0'>
+<script type="text/javascript">
+	var swatch = "<?php echo $helper->getSetting('option_swatch');?>";
+	var price_old = jQuery('.product-shop .price-box .price:first').text();
+	var priceFormat = JSON.parse('<?php echo $priceFormat;?>');
+	if(jQuery('.product-shop .price-box .special-price:first').length >= 1){
+		var special_price_old = jQuery('.product-shop .price-box .special-price:first .price').text();
+	}
+	if(swatch){
+		jQuery('#bss_configurablegridview td.attributes').click(function(){
+			/* start change thumbnail*/
+			var child_id = jQuery(this).children('.attribute-select').attr('data-childid');
+			var url = "<?php echo Mage::getBaseUrl();?>" + "configurablegridview/index/index";
+			jQuery.ajax({
+                url : url,
+                type : "post",
+                data: {id:child_id},
+                success : function (result){
+                    jQuery('.product-img-box').empty();
+                    jQuery.when(jQuery('.product-img-box').append(result)).then(ProductMediaManager.init());
+                },
+                error: function(){
+                	alert('error');
+                }
+            });
+			/* end change thumnail*/
+
+		});
+	}
+	jQuery(document).ready(function(){
+		jQuery('#bss_configurablegridview .qty_att_product').change();
+	});
+	jQuery('#bss_configurablegridview .qty_att_product').change(function() {
+		jQuery('#bss_configurablegridview .validation-advice').remove();
+		total1 = 0;
+		total2 = 0;
+		var error = 0;
+		var custom_option = parseFloat(jQuery('#custom_option').val());
+		jQuery('#bss_configurablegridview .qty_att_product').each(function() {
+			qty2 = parseInt(jQuery(this).val());
+			qty1 = parseInt(jQuery(this).val());
+			if(isNaN(qty1)) qty1 = qty2 = 0;
+			var dataId = jQuery(this).attr('data-id');
+			/* start add tier price */
+			jQuery('.tierprice_group_'+dataId).find('.tierprice').each(function(){
+				tierprice = parseInt(jQuery(this).attr('data-qty'));
+				if(qty2 < tierprice && qty2!= 0 ) {
+					qty2 = parseInt(jQuery(this).prev().attr('data-qty'));
+					return false;
+				}
+				else if(qty2 > tierprice && qty2!= 0 && !jQuery(this).next().attr('data-qty')){
+					qty2 = parseInt(jQuery(this).attr('data-qty'));
+					return false;
+				}
+			});
+			/* end add tier price */
+			if(qty1 != 0) {
+				error = 1;
+			}
+			if(jQuery('.tierprice_group_'+dataId).find("[data-qty='" + qty2 + "']").val()) {
+				price1 = parseFloat(jQuery('.tierprice_group_'+dataId).find("[data-qty='" + qty2 + "']").val()) + custom_option;
+			}else {
+				price1 = parseFloat(jQuery('.price_'+dataId).val()) + custom_option;
+			}
+			price2 = jQuery('.old_price_'+dataId).val();
+			total1 = total1*1 + price1 * qty1*1;
+			total2 = total2*1 + price2 * qty1*1;
+			jQuery('.total_'+dataId).find('span').text(formatCurrency(price1 * qty1, priceFormat));
+		});
+		priceTotal1 = total1*1;
+		priceTotal2 = total2*1;
+		currency = formatCurrency(priceTotal1, priceFormat);
+		currency2 = formatCurrency(priceTotal2, priceFormat);
+		if(jQuery('.product-shop .price-box .special-price:first').length < 1){
+			jQuery('.product-shop .price-box .regular-price .price').text(currency);
+		}else{
+			jQuery('.product-shop .price-box .special-price .price').text(currency);
+			jQuery('.product-shop .price-box .old-price .price').text(currency2);
+		}
+		if(error === 1) {
+			jQuery('#bss_configurablegridview .check-configuable-product').val(1);
+		}else {
+			jQuery('#bss_configurablegridview .check-configuable-product').val('');
+		}
+	})
+	jQuery('.reset-configurablegridview').click(function() {
+		jQuery('#bss_configurablegridview .qty_att_product').val(0);
+		jQuery('#bss_configurablegridview td.price').find('span').text(formatCurrency(0, priceFormat));
+		if(jQuery('.product-shop .price-box .special-price:first').length < 1){
+			jQuery('.product-shop .price-box .regular-price .price').text(formatCurrency(0, priceFormat));
+		}else{
+			jQuery('.product-shop .price-box .old-price .price').text(formatCurrency(0, priceFormat));
+			jQuery('.product-shop .price-box .special-price .price').text(formatCurrency(0, priceFormat));
+		}
+		jQuery('#bss_configurablegridview .check-configuable-product').val('');
+	})
+</script>

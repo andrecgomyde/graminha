@@ -1,0 +1,31 @@
+<div class="container" style="padding:20px 15px 0;font-family:sans-serif;">
+    <div id="banner-slider-demo-3-new" class="owl-carousel owl-theme owl-middle-narrow owl-banner-carousel">
+        <div class="item">
+           <a href="https://usebuhlojistas.com.br/colecoes.html"> <img src="https://usebuhlojistas.com.br/media/wysiwyg/porto/homepage/slider/03/slide_nova_colecao_crois_ton_reve_buh_lojistas.jpg" alt="" />
+            <div class="slide3-1-new-content" style="position:absolute; right:9.5%;top:40%;text-align:right;">
+                <em style="font-weight:400;color:#666666;float:left;font-style:normal;"></em>
+                <div class="clearer"></div>
+                <h2 style="font-weight:400;color:#141414;margin:0;line-height:1;"></h2>
+                <hr style="width: 50%;border-color:#151515;float:right;"></hr>
+                <div class="clearer"></div>
+                <a href="#" style="color:#2b262f;font-weight:700;"><span></span></a>
+            </div>
+        </div>
+        <div class="item">
+           <a href="https://usebuhlojistas.com.br/colecoes.html"> <img src="https://usebuhlojistas.com.br/media/wysiwyg/porto/homepage/slider/03/slide_nova_colecao_crois_ton_reve_buh_lojistas.jpg" alt="" />
+            <div class="slide3-1-new-content" style="position:absolute; right:9.5%;top:40%;text-align:right;">
+                <em style="font-weight:400;color:#666666;float:left;font-style:normal;"></em>
+                <div class="clearer"></div>
+                <h2 style="font-weight:400;color:#141414;margin:0;line-height:1;"></h2>
+                <hr style="width: 50%;border-color:#151515;float:right;"></hr>
+                <div class="clearer"></div>
+                <a href="#" style="color:#2b262f;font-weight:700;"><span></span></a>
+            </div>
+        </div>
+    </div>
+    <script type="text/javascript">
+        jQuery(function($){
+            $("#banner-slider-demo-3-new").owlCarousel({autoPlay:false,lazyLoad:true, stopOnHover: true,pagination: false, autoPlay: false,navigation: false,navigationText:["<i class='icon-chevron-left'></i>","<i class='icon-chevron-right'></i>"],slideSpeed : 500,paginationSpeed : 3000,singleItem:true,transitionStyle : "fade"});
+        });
+    </script>
+</div>

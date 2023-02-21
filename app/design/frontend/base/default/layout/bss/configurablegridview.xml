@@ -1,0 +1,37 @@
+<?xml version="1.0"?>
+<layout version="1.0.0">
+	<default translate="label">
+		<reference name="head">
+			<action method="addItem" ifconfig="configurablegridview/settings/jquery"><type>skin_js</type><name>js/bss/jquery-1.9.1.min.js</name></action>
+			<action method="addItem" ifconfig="configurablegridview/settings/jquery"><type>skin_js</type><name>js/bss/jquery-noConflict.js</name></action>
+			<action method="addItem"><type>skin_css</type><name>css/bss/configurable.css</name></action>
+		</reference>
+		<reference name="catalog_product_price_template">
+            <action method="addPriceBlockType" ifconfig="configurablegridview/settings/is_enabled">
+            	<type>configurable</type>
+            	<block>catalog/product_price</block>
+            	<template helper="configurablegridview/getTemplatePrice"/>
+            </action>
+        </reference>
+	</default>
+	
+	<catalog_product_view>
+		<reference name="head">
+			<action method="addJs" ifconfig="configurablegridview/settings/is_enabled"><script>varien/product.js</script></action>
+            <action method="addJs" ifconfig="configurablegridview/settings/is_enabled"><script>jsoverride/product.js</script></action>
+        </reference>
+		<reference name="product.info.addtocart">
+			<action method="setTemplate" ifconfig="configurablegridview/settings/is_enabled">
+				<template helper="configurablegridview/getAddToCartTemplate"/>
+			</action>
+		</reference>
+	</catalog_product_view>
+
+	<PRODUCT_TYPE_configurable>
+		<reference name="product.info.options.configurable">
+			<action method="setTemplate" ifconfig="configurablegridview/settings/is_enabled">
+				<template helper="configurablegridview/getTemplate"/>
+			</action>
+		</reference>
+	</PRODUCT_TYPE_configurable>
+</layout>

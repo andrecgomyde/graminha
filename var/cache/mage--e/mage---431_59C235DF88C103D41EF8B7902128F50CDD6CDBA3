@@ -1,0 +1,48 @@
+<form id="search_mini_form" action="//usebuhlojistas.com.br/catalogsearch/result/" method="get">
+    <div class="form-search ">
+        <label for="search">Buscar:</label>
+                <input id="search" type="text" name="q" class="input-text" />
+                <select id="cat" name="cat">
+            <option value="">Categorias</option>
+                            <option value="4">Roupas</option>
+                                                            <option value="5">- T-shirt</option>
+                                            <option value="7">- Bermudas</option>
+                                            <option value="74">- Blusas</option>
+                                            <option value="6">- Calças</option>
+                                            <option value="13">- Cuécas</option>
+                                            <option value="8">- Jaquetas</option>
+                                            <option value="73">- Manga longa</option>
+                                            <option value="16">- Meias</option>
+                                            <option value="9">- Moletons</option>
+                                            <option value="10">- Regatas</option>
+                                            <option value="72">- Sobretudo</option>
+                                            <option value="22">- Sungas</option>
+                                                                <option value="11">Acessórios</option>
+                                                            <option value="12">- Bonés</option>
+                                            <option value="14">- Cachecol</option>
+                                            <option value="19">- Carteiras</option>
+                                            <option value="20">- Chinelos</option>
+                                            <option value="15">- Gorros</option>
+                                            <option value="17">- Mochilas</option>
+                                            <option value="18">- Necessaires</option>
+                                            <option value="21">- Porta Boné</option>
+                                            <option value="28">- Tenis</option>
+                                                                <option value="23">Kids</option>
+                                                            <option value="53">- Camisetas</option>
+                                            <option value="54">- Calças</option>
+                                            <option value="55">- Cuécas</option>
+                                            <option value="56">- Bermudas</option>
+                                            <option value="57">- Jaquetas</option>
+                                            <option value="58">- Moletons</option>
+                                            <option value="59">- Regatas</option>
+                                            <option value="60">- Sungas</option>
+                                                                <option value="68">Coleções</option>
+                                                            <option value="69">- Rêver</option>
+                                            <option value="70">- Croire</option>
+                                            <option value="71">- Effectuer</option>
+                                                        </select>
+                <button type="submit" title="Procurar" class="button"><i class="icon-search"></i></button>
+        <div id="search_autocomplete" class="search-autocomplete"></div>
+        <div class="clearer"></div>
+    </div>
+</form>

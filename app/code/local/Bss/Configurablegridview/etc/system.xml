@@ -1,0 +1,141 @@
+<?xml version="1.0"?>
+
+<config>
+	<tabs>
+		<bss translate="label" module="configurablegridview">
+			<label>Bss Commerce</label>
+			<sort_order>200</sort_order>
+		</bss>
+	</tabs>
+ 	<sections>
+		<configurablegridview translate="label" module="configurablegridview">
+			<class>separator-top</class>
+			<label>Configurable Grid View</label>
+			<tab>bss</tab>
+			<frontend_type>text</frontend_type>
+			<sort_order>20</sort_order>
+			<show_in_default>1</show_in_default>
+			<show_in_website>1</show_in_website>
+			<show_in_store>1</show_in_store>
+			<groups>
+				<settings translate="label" module="configurablegridview">
+					<label>General</label>
+					<frontend_type>text</frontend_type>
+					<sort_order>10</sort_order>
+					<show_in_default>1</show_in_default>
+					<show_in_website>1</show_in_website>
+					<show_in_store>1</show_in_store>
+					<expanded>1</expanded>
+					<fields>
+						<is_enabled translate="label">
+                            <label>Enabled</label>
+                            <frontend_type>select</frontend_type>
+                            <source_model>adminhtml/system_config_source_yesno</source_model>
+                            <backend_model>configurablegridview/system_config_backend_custom</backend_model>
+                            <sort_order>10</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+							<comment>
+							<![CDATA["Yes" option to enable, "No" option to disable.]]></comment>
+                        </is_enabled>
+                        <jquery translate="label">
+                            <label>Enabled jQuery Library</label>
+                            <frontend_type>select</frontend_type>
+                            <source_model>adminhtml/system_config_source_yesno</source_model>
+                            <sort_order>15</sort_order>
+                            <show_in_default>1</show_in_default>
+                            <show_in_website>1</show_in_website>
+                            <show_in_store>1</show_in_store>
+							<comment>
+							<![CDATA["Yes" option to enable, "No" option to disable.]]></comment>
+                        </jquery>
+						<enable_stock_avail translate="label">
+						  <label>Display Stock Availability</label>
+						  <frontend_type>select</frontend_type>
+						  <source_model>adminhtml/system_config_source_yesno</source_model>
+						  <sort_order>20</sort_order>
+						  <show_in_default>1</show_in_default>
+						  <show_in_website>1</show_in_website>
+						  <show_in_store>1</show_in_store>
+						  <comment>If enabled the products qty column will be enabled in configurable grid view table</comment>
+						</enable_stock_avail>
+						<show_number_stock translate="label">
+							<label>Display Stock Number</label>
+							<frontend_type>select</frontend_type>
+							<source_model>adminhtml/system_config_source_yesno</source_model>
+							<sort_order>21</sort_order>
+							<show_in_default>1</show_in_default>
+						  	<show_in_website>1</show_in_website>
+						  	<show_in_store>1</show_in_store>
+						  	<depends>
+						  		<enable_stock_avail>1</enable_stock_avail>
+						  	</depends>
+						</show_number_stock>
+						<show_out_stock translate="label">
+							<label>Display Out of Stock Status</label>
+							<frontend_type>select</frontend_type>
+							<source_model>adminhtml/system_config_source_yesno</source_model>
+							<sort_order>22</sort_order>
+							<show_in_default>1</show_in_default>
+						  	<show_in_website>1</show_in_website>
+						  	<show_in_store>1</show_in_store>
+						  	<depends>
+						  		<enable_stock_avail>1</enable_stock_avail>
+						  	</depends>
+						  	<comment>If enabled, the products have Stock Availability = "Out of stock" will be displayed in the configurable grid view table.</comment>
+						</show_out_stock>
+						<show_price translate="label">
+							<label>Show Subtotal</label>
+							<frontend_type>select</frontend_type>
+							<source_model>adminhtml/system_config_source_yesno</source_model>
+							<sort_order>30</sort_order>
+							<show_in_default>1</show_in_default>
+						  	<show_in_website>1</show_in_website>
+						  	<show_in_store>1</show_in_store>
+						  	<comment>If enabled, subtotal column will be displayed in the configurable grid view table.</comment>
+						</show_price>
+						<show_tier_price translate="label">
+							<label>Show Tier Price</label>
+							<frontend_type>select</frontend_type>
+							<source_model>adminhtml/system_config_source_yesno</source_model>
+							<sort_order>40</sort_order>
+							<show_in_default>1</show_in_default>
+						  	<show_in_website>1</show_in_website>
+						  	<show_in_store>1</show_in_store>
+							<comment><![CDATA[Show tier price in table view.]]></comment>
+						</show_tier_price>
+						<option_swatch translate="label">
+							<label>Use Option Swatch</label>
+							<frontend_type>select</frontend_type>
+							<source_model>adminhtml/system_config_source_yesno</source_model>
+							<sort_order>50</sort_order>
+							<show_in_default>1</show_in_default>
+						  	<show_in_website>1</show_in_website>
+						  	<show_in_store>1</show_in_store>
+						</option_swatch>
+						<use_simple_price translate="label">
+							<label>Configurable Product Use Simple Price</label>
+							<frontend_type>select</frontend_type>
+							<source_model>adminhtml/system_config_source_yesno</source_model>
+							<backend_model>configurablegridview/system_config_backend_custom</backend_model>
+							<sort_order>150</sort_order>
+							<show_in_default>1</show_in_default>
+						  	<show_in_website>1</show_in_website>
+						  	<show_in_store>1</show_in_store>
+						</use_simple_price>
+						<show_unit_price translate="label">
+							<label>Show Unit Price</label>
+							<frontend_type>select</frontend_type>
+							<source_model>adminhtml/system_config_source_yesno</source_model>
+							<sort_order>160</sort_order>
+							<show_in_default>1</show_in_default>
+						  	<show_in_website>1</show_in_website>
+						  	<show_in_store>1</show_in_store>
+						</show_unit_price>
+					</fields>
+				</settings>		
+			</groups>
+		</configurablegridview>
+	</sections>
+</config> 

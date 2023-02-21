@@ -1,0 +1,64 @@
+<?php
+ /**
+ * BssCommerce Co.
+ *
+ * NOTICE OF LICENSE
+ *
+ * This source file is subject to the EULA
+ * that is bundled with this package in the file LICENSE.txt.
+ * It is also available through the world-wide-web at this URL:
+ * http://bsscommerce.com/Bss-Commerce-License.txt
+ *
+ * =================================================================
+ *                 MAGENTO EDITION USAGE NOTICE
+ * =================================================================
+ * This package designed for Magento COMMUNITY edition
+ * BssCommerce does not guarantee correct work of this extension
+ * on any other Magento edition except Magento COMMUNITY edition.
+ * BssCommerce does not provide extension support in case of
+ * incorrect edition usage.
+ * =================================================================
+ *
+ * @category   BSS
+ * @package    BSS_Configurablegridview
+ * @author     Hieu Dang
+ * @copyright  Copyright (c) 2014-2105 BssCommerce Co. (http://bsscommerce.com)
+ * @license    http://bsscommerce.com/Bss-Commerce-License.txt
+ */
+?>
+
+<?php $_product = $this->getProduct(); ?>
+<?php 
+    if(Mage::app()->getRequest()->getActionName() == 'configure'){
+        $buttonTitle = $this->__('Update Cart'); 
+    }else{
+        $buttonTitle = $this->__('Add to Cart'); 
+    }
+?>
+<?php $helper = Mage::helper('configurablegridview'); ?>
+
+<?php if($helper->getSetting('is_enabled')): ?>
+    <?php if($_product->isSaleable()): ?>
+        <div class="add-to-cart">
+            <?php if($_product->getTypeId() != 'configurable') : ?>    
+             <?php if(!$_product->isGrouped()): ?>
+                <label for="qty"><?php echo $this->__('Qty:') ?></label>
+                <input type="text" name="qty" id="qty" maxlength="12" value="<?php echo $this->getProductDefaultQty() * 1 ?>" title="<?php echo $this->__('Qty') ?>" class="input-text qty" />
+            <?php endif; ?>
+        <?php endif ?>
+        <button type="button" title="<?php echo $buttonTitle ?>" class="button btn-cart" onclick="productAddToCartForm.submit(this)"><span><span><?php echo $buttonTitle ?></span></span></button>
+        <?php echo $this->getChildHtml('', true, true) ?>
+    </div>
+<?php endif; ?>  
+<?php else:?>  
+    <?php if($_product->isSaleable()): ?>
+        <div class="add-to-cart">
+            <?php if(!$_product->isGrouped()): ?>
+                <label for="qty"><?php echo $this->__('Qty:') ?></label>
+                <input type="text" name="qty" id="qty" maxlength="12" value="<?php echo $this->getProductDefaultQty() * 1 ?>" title="<?php echo $this->__('Qty') ?>" class="input-text qty" />
+            <?php endif; ?>
+            <button type="button" title="<?php echo $buttonTitle ?>" class="button btn-cart" onclick="productAddToCartForm.submit(this)"><span><span><?php echo $buttonTitle ?></span></span></button>
+            <?php echo $this->getChildHtml('', true, true) ?>
+        </div>
+    <?php endif; ?>
+<?php endif; ?>
